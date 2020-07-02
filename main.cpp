@@ -11,7 +11,7 @@
 #include "colors.h"
 using namespace std;
 
-void print_middle(const char *msg);
+void PrintTitle(WINDOW *win,const char *msg);
 
 int main(int argc, char *argv[])
 {
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     getmaxyx(stdscr, h, w);
 
     if(w < 70 || h < 20) {
-        printf(FRED("Terminal windows is too small!\n"));
+        printf(FRED("Terminal window is too small!\n"));
         endwin();
         return 0;
     }
@@ -38,34 +38,28 @@ int main(int argc, char *argv[])
     list = newwin(h / 2 - 1, w - 2, 1, 1);
     form = newwin(h / 2, w / 2, h / 2, w / 2);
 
-    start_color();
-    init_pair(1, COLOR_BLUE, COLOR_BLACK);
-
     box(stdscr, 0, 0);
     box(list, 0, 0);
     box(form, 0, 0);
-    attron(COLOR_PAIR(1));
-    print_middle("netu1");
-    attroff(COLOR_PAIR(1));
+    PrintTitle(stdscr, "netUtility");
+    PrintTitle(form, "Connect");
     scrollok(list, TRUE);
 
+    refresh();
+    wrefresh(form);
     for (int i = 0; i < 10; i++){
-        wprintw(list, "Govno");
+        mvwprintw(list, i + 1, 1, "Govno");
         wrefresh(list);
     }
-    //refresh();
-    wrefresh(list);
-    wrefresh(form);
 
     pause();
     endwin();
     return 0;
 }
 
-void print_middle(const char *msg)
+void PrintTitle(WINDOW *win,const char *msg)
 {
     int col, row;
-    getmaxyx(stdscr, row, col);
-    cout << col << row << endl;
-    mvprintw(0, col / 2 - strlen(msg), msg);
+    getmaxyx(win, row, col);
+    mvwprintw(win, 0, col / 2 - strlen(msg), msg);
 }
